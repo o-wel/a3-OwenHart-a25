@@ -1,0 +1,14 @@
+{
+  "name": "a3-owenhart",
+  "version": "1.0.0",
+  "description": "Third assignment of CS4241",
+  "author": "Owen Hart",
+  "scripts": {
+    "dev": "node --env-file=.env server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "mime": "^2.6.0",
+    "mongodb": "^6.19.0"
+  }
+}

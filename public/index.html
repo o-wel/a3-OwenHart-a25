@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>CS4241 Assignment 3</title>
+    <meta charset="utf-8">
+    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- fonts from google fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Permanent+Marker&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <!-- get rid of favicon error -->
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  </head>
+  <body>
+    <div align="center">
+      <h1>Game Wishlist</h1>
+      <div class="flex-row">
+        <table id="wishlist">
+          <tr>
+            <th>Name</th>
+            <th>Review</th>
+            <th>Price</th>
+          </tr>
+        </table>
+        <div class="flex-col">
+          <h2>Modify List</h2>
+          <input type="text" id="gamename" placeholder="Game Name">
+          <input type="text" id="gamereview" placeholder="Game Review">
+          <input type="number" id="gameprice" placeholder="Game Price">
+          <button>Add Game</button>
+        </div>
+      </div>
+      <form>
+        <table id="derived">
+          <tr>
+            <th>Total Price</th>
+            <th>Average Price</th>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </body>
+</html>
