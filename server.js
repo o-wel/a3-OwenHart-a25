@@ -17,20 +17,44 @@ const client = new MongoClient(uri, {
     }
 });
 
+let collection = null;
+
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        await client.connect(err => {
+            console.log(err);
+            client.close();
+        });
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
+        await client.db("a3-db").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
+        collection = client.db("a3-db").collection("game-wishlist");
     } finally {
         // Ensures that the client will close when you finish/error
-        await client.close();
+        //await client.close();
+        //console.log("closed client");
     }
 }
+
+app.get("/appdata", async (req, res) => {
+    if(collection !== null){
+        const data = await collection.find({}).toArray();
+        res.json(data);
+    }
+})
+
+app.post( '/submit', async (req,res) => {
+    const result = await collection.insertOne( req.body )
+    res.json( result )
+})
+
+app.post('/remove', async (req,res) => {
+    const removed = await collection.findOneAndDelete({name: req.body})
+    res.json(removed)
+})
+
 run().catch(console.dir);
-
-
 
 app.listen(process.env.PORT || 3000)

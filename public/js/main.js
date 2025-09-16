@@ -71,12 +71,12 @@ const updateTableData = function(contents) {
     deleteButton.innerHTML = "<button>Delete</button>"
 
     deleteButton.addEventListener("click", () => {
-      removeRow(rowNum)
+      removeRow(element)
     })
 
     editButton.addEventListener("click", () => {
       editRow(element.name, element.review, element.price);
-      removeRow(rowNum)
+      removeRow(element)
     })
 
     const derivedTable = document.getElementById("derived");
@@ -102,8 +102,8 @@ const editRow = async function( name, review, price ) {
   priceInput.value = price
 }
 
-const removeRow = async function(rowNum) {
-  body = JSON.stringify( rowNum );
+const removeRow = async function(element) {
+  body = JSON.stringify( element.name );
   // update server
   const response = await fetch( "/remove", {
     method:"POST",
