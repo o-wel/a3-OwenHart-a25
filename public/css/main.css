@@ -1,11 +1,18 @@
 body {
-  background:dimgrey;
+  background:dimgray;
   color:white;
   font-family: "Roboto Condensed", sans-serif;
 }
 
 h1 {
   text-decoration: underline;
+}
+
+.card {
+    background-color: dimgrey;
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 1rem;;
 }
 
 .flex-col {
@@ -17,7 +24,7 @@ h1 {
 .flex-row {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: start;
   justify-content: center;
   gap: 2rem;
 }
@@ -42,15 +49,18 @@ input {
   font-family: "Roboto Condensed", sans-serif;
 }
 
-table, th, tr, td {
-  border: 2px solid black;
+table, th, tr {
+  border: 1px solid black;
+  border-collapse: collapse;
   font-size: 1.1rem;
 }
 
-td {
-  padding: 0.4rem;
+th, td {
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  border: 1px solid black;
 }
 
-#wishlist {
+#wishlist, #derived {
   margin: 2rem;
 }

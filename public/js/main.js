@@ -1,5 +1,20 @@
 // FRONT-END (CLIENT) JAVASCRIPT HERE
 
+// page load actions
+window.onload = async function() {
+  const button = document.querySelector("button");
+  button.onclick = submit;
+
+  const tableContents = await fetch( "/appdata", {
+    method:"GET",
+  } );
+
+  const contents = await tableContents.json();
+  console.log( "response:", contents );
+
+  await updateTableData( contents );
+}
+
 const submit = async function( event ) {
   // stop form submission from trying to load
   // a new .html page for displaying results...
@@ -12,7 +27,6 @@ const submit = async function( event ) {
         priceInput = document.getElementById( "gameprice" ),
         json = [{ "name": nameInput.value, "review": reviewInput.value, "price": priceInput.value },
         ]
-        body = JSON.stringify( json )
 
   nameInput.value = ""
   reviewInput.value = ""
@@ -20,31 +34,26 @@ const submit = async function( event ) {
 
   const response = await fetch( "/submit", {
     method:"POST",
-    body 
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(json),
   })
 
   const newData = await response.json()
   console.log( "updated data:", newData )
 
-  updateTableData(newData)
+  await updateTableData()
 }
 
-window.onload = async function() {
-  const button = document.querySelector("button");
-  button.onclick = submit;
-
+const updateTableData = async function() {
+  const table = document.getElementById("wishlist");
   const tableContents = await fetch( "/appdata", {
     method:"GET",
   } );
 
   const contents = await tableContents.json();
-  console.log( "response:", contents );
-
-  updateTableData( contents );
-}
-
-const updateTableData = function(contents) {
-  const table = document.getElementById("wishlist");
+  console.log( "database:", contents );
 
   for ( let i = table.rows.length-1; i >= 1; i-- ) {
     table.deleteRow(i)
@@ -54,6 +63,7 @@ const updateTableData = function(contents) {
 
   contents.forEach(( element, rowNum ) => {
     const row = table.insertRow();
+    row.className = "card"
 
     const name = row.insertCell(0);
     const review = row.insertCell(1);
@@ -103,13 +113,17 @@ const editRow = async function( name, review, price ) {
 }
 
 const removeRow = async function(element) {
-  body = JSON.stringify( element.name );
   // update server
   const response = await fetch( "/remove", {
     method:"POST",
-    body
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(element)
   })
 
   const newData = await response.json()
-  updateTableData(newData)
+  console.log( "removed row:", newData )
+
+  await updateTableData()
 }

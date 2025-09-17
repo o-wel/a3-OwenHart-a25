@@ -18,29 +18,31 @@
     <div align="center">
       <h1>Game Wishlist</h1>
       <div class="flex-row">
-        <table id="wishlist">
-          <tr>
-            <th>Name</th>
-            <th>Review</th>
-            <th>Price</th>
-          </tr>
-        </table>
+          <table id="wishlist">
+            <tr class="card">
+              <th>Name</th>
+              <th>Review</th>
+              <th>Price</th>
+            </tr>
+          </table>
         <div class="flex-col">
-          <h2>Modify List</h2>
-          <input type="text" id="gamename" placeholder="Game Name">
-          <input type="text" id="gamereview" placeholder="Game Review">
-          <input type="number" id="gameprice" placeholder="Game Price">
-          <button>Add Game</button>
+          <table id="derived">
+            <tr>
+              <th>Total Price</th>
+              <th>Average Price</th>
+            </tr>
+          </table>
+          <form>
+            <div class="flex-col">
+              <h2>Modify List</h2>
+              <input type="text" id="gamename" placeholder="Game Name">
+              <input type="text" id="gamereview" placeholder="Game Review">
+              <input type="number" id="gameprice" placeholder="Game Price">
+              <button>Add Game</button>
+            </div>
+          </form>
         </div>
       </div>
-      <form>
-        <table id="derived">
-          <tr>
-            <th>Total Price</th>
-            <th>Average Price</th>
-          </tr>
-        </table>
-      </form>
     </div>
   </body>
 </html>

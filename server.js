@@ -1,11 +1,7 @@
 const express = require( "express" ),
     app = express()
 
-app.use(express.json());
-
-app.use(express.static("public"));
-
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId} = require('mongodb');
 const uri = `mongodb+srv://${process.env.USR}:${process.env.PASS}@${process.env.HOST}/?retryWrites=true&w=majority&appName=a3-OwenHart`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -38,6 +34,9 @@ async function run() {
     }
 }
 
+app.use(express.static("public"));
+app.use(express.json());
+
 app.get("/appdata", async (req, res) => {
     if(collection !== null){
         const data = await collection.find({}).toArray();
@@ -46,12 +45,13 @@ app.get("/appdata", async (req, res) => {
 })
 
 app.post( '/submit', async (req,res) => {
-    const result = await collection.insertOne( req.body )
+    console.log(req.body)
+    const result = await collection.insertMany( req.body )
     res.json( result )
 })
 
 app.post('/remove', async (req,res) => {
-    const removed = await collection.findOneAndDelete({name: req.body})
+    const removed = await collection.deleteOne({_id: new ObjectId(req.body._id)})
     res.json(removed)
 })
 
