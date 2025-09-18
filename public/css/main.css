@@ -1,18 +1,10 @@
 body {
-  background:dimgray;
-  color:white;
+  background: dimgray;
   font-family: "Roboto Condensed", sans-serif;
 }
 
 h1 {
   text-decoration: underline;
-}
-
-.card {
-    background-color: dimgrey;
-    border-radius: 10px;
-    padding: 1rem;
-    margin: 1rem;;
 }
 
 .flex-col {
@@ -27,20 +19,6 @@ h1 {
   align-items: start;
   justify-content: center;
   gap: 2rem;
-}
-
-button {
-  border-radius: 5px;
-  transition: linear 0.2s;
-  font-family: "Roboto Condensed", sans-serif;
-  font-size: 1.1rem;
-  background-color: grey;
-  color: white;
-}
-
-button:hover {
-  scale: 1.1;
-  color: orange;
 }
 
 input {

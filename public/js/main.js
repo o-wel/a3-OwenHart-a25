@@ -63,7 +63,6 @@ const updateTableData = async function() {
 
   contents.forEach(( element, rowNum ) => {
     const row = table.insertRow();
-    row.className = "card"
 
     const name = row.insertCell(0);
     const review = row.insertCell(1);
@@ -77,8 +76,8 @@ const updateTableData = async function() {
 
     totalPrice += Number(element.price);
 
-    editButton.innerHTML = "<button>Edit</button>"
-    deleteButton.innerHTML = "<button>Delete</button>"
+    editButton.innerHTML = "<button class='btn btn-secondary'>Edit</button>"
+    deleteButton.innerHTML = "<button class='btn btn-secondary'>Delete</button>"
 
     deleteButton.addEventListener("click", () => {
       removeRow(element)
