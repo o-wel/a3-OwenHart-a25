@@ -12,6 +12,11 @@ window.onload = async function() {
         loginButton.onclick = login;
     }
 
+    const createButton = document.getElementById("createbtn");
+    if (createButton) {
+        createButton.onclick = createAccount;
+    }
+
     const logoutButton = document.getElementById("logoutbtn");
     if (logoutButton) {
         logoutButton.onclick = logout;
@@ -55,8 +60,52 @@ const login = async function( event ) {
 
         const errMsg = document.getElementById("errMsg");
         if(errMsg) {
-            errMsg.innerHTML = '<p class="text-danger-emphasis">Invalid username or password</p>';
+            errMsg.innerHTML = '<p class="text-danger">Invalid username or password</p>';
         }
+    }
+}
+
+const createAccount = async function( event ) {
+    event.preventDefault();
+
+    const usernameInput = document.getElementById( "create-username" ),
+            passwordInput = document.getElementById( "create-password" ),
+            checkPasswordInput = document.getElementById( "create-confirm-password" )
+
+    if ( passwordInput.value !== checkPasswordInput.value ) {
+        const errMsg = document.getElementById("create-errMsg");
+        if(errMsg) {
+            errMsg.innerHTML = '<p class="text-danger">Passwords do not match</p>';
+        }
+    } else if (usernameInput.value === '' || passwordInput.value === '' || checkPasswordInput.value === '' ) {
+        const errMsg = document.getElementById("create-errMsg");
+        if(errMsg) {
+            errMsg.innerHTML = '<p class="text-danger">Empty Fields, please complete form</p>';
+        }
+
+    } else {
+        const json = { "username": usernameInput.value, "password": passwordInput.value }
+
+        const response = await fetch( "/createAccount", {
+            method:"POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(json),
+        })
+
+        const message = await response.json();
+        console.log( "create account response:", message );
+
+        if (message.status === "error") {
+            const errMsg = document.getElementById("create-errMsg");
+            if(errMsg) {
+                errMsg.innerHTML = `<p class="text-danger">${message.message}</p>`;
+            }
+        } else {
+            window.location.href = message.url;
+        }
+
     }
 }
 

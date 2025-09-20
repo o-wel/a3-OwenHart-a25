@@ -30,12 +30,9 @@ async function run() {
         await client.db("a3-db").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
-        collection = client.db("a3-db").collection("game-wishlist");
         userData = client.db("a3-db").collection("users");
-    } finally {
-        // Ensures that the client will close when you finish/error
-        //await client.close();
-        //console.log("closed client");
+    } catch (e) {
+        console.error(e);
     }
 }
 
@@ -54,6 +51,8 @@ const authUser = async (username, password, done) => {
     if (!user) {
         return done(null, false, { message: 'Could not find user with this password' });
     } else {
+        collection = client.db("a3-db").collection(username);
+
         return done(null, user);
     }
 }
@@ -108,6 +107,20 @@ app.get("/wishlist", checkAuth, (req, res) => {
 app.post('/login', passport.authenticate('local', {
     successRedirect: '/wishlist',
 }))
+
+app.post('/createAccount', async (req, res) => {
+    const checkUser = await userData.findOne({username: req.body.username});
+
+    if(checkUser){
+        res.json({status: 'error', message: 'Username already exists'});
+    } else {
+        await userData.insertOne({username: req.body.username, password: req.body.password});
+
+        await client.db("a3-db").createCollection(req.body.username)
+
+        res.json({status: 'ok', message: 'Account created successfully', url: '/loginpage'});
+    }
+})
 
 app.delete('/logout', (req, res) => {
     req.logOut(function (err) {

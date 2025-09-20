@@ -45,6 +45,10 @@ th, td {
   border: 1px solid black;
 }
 
+#dropdown {
+  margin: 2rem;
+}
+
 #wishlist, #derived {
   margin: 2rem;
 }

@@ -122,6 +122,7 @@ Your Render (or alternative server) link e.g. http://a3-joshua-cuneo.render.me
 
 Include a very brief summary of your project here. Images are encouraged, along with concise, high-level text. Be sure to include:
 
+This is project A3 for CS 4241 Computer Webware. This web application allows users to create an account, log in, and keep track of their own game wishlist.
 - the goal of the application
 - challenges you faced in realizing the application
 - what authentication strategy you chose to use and why (choosing one because it seemed the easiest to implement is perfectly acceptable)
