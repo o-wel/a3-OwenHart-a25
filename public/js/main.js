@@ -1,7 +1,7 @@
 // FRONT-END (CLIENT) JAVASCRIPT HERE
 
 // page load actions
-window.onload = async function() {
+window.onload = async function () {
     const button = document.getElementById("submitbtn");
     if (button) {
         button.onclick = submit;
@@ -36,58 +36,58 @@ window.onload = async function() {
     }
 }
 
-const login = async function( event ) {
+const login = async function (event) {
     event.preventDefault();
 
-    const usernameInput = document.getElementById( "username" ),
-          passwordInput = document.getElementById( "password" ),
-          json = { "username": usernameInput.value, "password": passwordInput.value }
+    const usernameInput = document.getElementById("username"),
+        passwordInput = document.getElementById("password"),
+        json = {"username": usernameInput.value, "password": passwordInput.value}
 
-    const response = await fetch( "/login", {
-        method:"POST",
+    const response = await fetch("/login", {
+        method: "POST",
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(json),
     })
 
-    console.log( "login response:", response );
-    if ( response.redirected ) {
+    console.log("login response:", response);
+    if (response.redirected) {
         window.location.href = response.url;
 
     } else {
         console.log("Login failed.");
 
         const errMsg = document.getElementById("errMsg");
-        if(errMsg) {
+        if (errMsg) {
             errMsg.innerHTML = '<p class="text-danger">Invalid username or password</p>';
         }
     }
 }
 
-const createAccount = async function( event ) {
+const createAccount = async function (event) {
     event.preventDefault();
 
-    const usernameInput = document.getElementById( "create-username" ),
-            passwordInput = document.getElementById( "create-password" ),
-            checkPasswordInput = document.getElementById( "create-confirm-password" )
+    const usernameInput = document.getElementById("create-username"),
+        passwordInput = document.getElementById("create-password"),
+        checkPasswordInput = document.getElementById("create-confirm-password")
 
-    if ( passwordInput.value !== checkPasswordInput.value ) {
+    if (passwordInput.value !== checkPasswordInput.value) {
         const errMsg = document.getElementById("create-errMsg");
-        if(errMsg) {
+        if (errMsg) {
             errMsg.innerHTML = '<p class="text-danger">Passwords do not match</p>';
         }
-    } else if (usernameInput.value === '' || passwordInput.value === '' || checkPasswordInput.value === '' ) {
+    } else if (usernameInput.value === '' || passwordInput.value === '' || checkPasswordInput.value === '') {
         const errMsg = document.getElementById("create-errMsg");
-        if(errMsg) {
+        if (errMsg) {
             errMsg.innerHTML = '<p class="text-danger">Empty Fields, please complete form</p>';
         }
 
     } else {
-        const json = { "username": usernameInput.value, "password": passwordInput.value }
+        const json = {"username": usernameInput.value, "password": passwordInput.value}
 
-        const response = await fetch( "/createAccount", {
-            method:"POST",
+        const response = await fetch("/createAccount", {
+            method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -95,11 +95,11 @@ const createAccount = async function( event ) {
         })
 
         const message = await response.json();
-        console.log( "create account response:", message );
+        console.log("create account response:", message);
 
         if (message.status === "error") {
             const errMsg = document.getElementById("create-errMsg");
-            if(errMsg) {
+            if (errMsg) {
                 errMsg.innerHTML = `<p class="text-danger">${message.message}</p>`;
             }
         } else {
@@ -109,129 +109,151 @@ const createAccount = async function( event ) {
     }
 }
 
-const logout = async function( event ) {
+const logout = async function (event) {
     event.preventDefault();
 
-    const response = await fetch( "/logout", {
-        method:"DELETE",
+    const response = await fetch("/logout", {
+        method: "DELETE",
     })
 
-    console.log( "response:", response );
-    if ( response.redirected ) {
+    console.log("response:", response);
+    if (response.redirected) {
         window.location.href = response.url;
     } else {
         console.log("Logout failed.");
     }
 }
 
-const submit = async function( event ) {
-  // stop form submission from trying to load
-  // a new .html page for displaying results...
-  // this was the original browser behavior and still
-  // remains to this day
-  event.preventDefault()
-  
-  const nameInput = document.getElementById( "gamename" ),
-        reviewInput = document.getElementById( "gamereview" ),
-        priceInput = document.getElementById( "gameprice" ),
-        json = [{ "name": nameInput.value, "review": reviewInput.value, "price": priceInput.value },
+const submit = async function (event) {
+    // stop form submission from trying to load
+    // a new .html page for displaying results...
+    // this was the original browser behavior and still
+    // remains to this day
+    event.preventDefault()
+
+    const nameInput = document.getElementById("gamename"),
+        reviewInput = document.getElementById("gamereview"),
+        priceInput = document.getElementById("gameprice"),
+        json = [{"name": nameInput.value, "review": reviewInput.value, "price": priceInput.value},
         ]
 
-  nameInput.value = ""
-  reviewInput.value = ""
-  priceInput.value = ""
+    nameInput.value = ""
+    reviewInput.value = ""
+    priceInput.value = ""
 
-  const response = await fetch( "/submit", {
-    method:"POST",
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(json),
-  })
+    const response = await fetch("/submit", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(json),
+    })
 
-  const newData = await response.json()
-  console.log( "updated data:", newData )
+    const newData = await response.json()
+    console.log("updated data:", newData)
 
-  await updateTableData()
+    await updateTableData()
 }
 
-const updateTableData = async function() {
-  const table = document.getElementById("wishlist");
-  const tableContents = await fetch( "/appdata", {
-    method:"GET",
-  } );
+const updateTableData = async function () {
+    const table = document.getElementById("wishlist");
+    const tableContents = await fetch("/appdata", {
+        method: "GET",
+    });
 
-  const contents = await tableContents.json();
-  console.log( "database:", contents );
+    const contents = await tableContents.json();
+    console.log("database:", contents);
 
-  for ( let i = table.rows.length-1; i >= 1; i-- ) {
-    table.deleteRow(i)
-  }
-
-  let totalPrice = 0;
-
-  contents.forEach(( element, rowNum ) => {
-    const row = table.insertRow();
-
-    const name = row.insertCell(0);
-    const review = row.insertCell(1);
-    const price = row.insertCell(2);
-    const editButton = row.insertCell(3);
-    const deleteButton = row.insertCell(4);
-
-    name.innerHTML = element.name;
-    review.innerHTML = element.review;
-    price.innerHTML = element.price;
-
-    totalPrice += Number(element.price);
-
-    editButton.innerHTML = "<button class='btn btn-secondary'>Edit</button>"
-    deleteButton.innerHTML = "<button class='btn btn-secondary'>Delete</button>"
-
-    deleteButton.addEventListener("click", () => {
-      removeRow(element)
-    })
-
-    editButton.addEventListener("click", () => {
-      editRow(element.name, element.review, element.price);
-      removeRow(element)
-    })
-
-    const derivedTable = document.getElementById("derived");
-    if (derivedTable.rows.length > 1) {
-      derivedTable.deleteRow(1);
+    for (let i = table.rows.length - 1; i >= 1; i--) {
+        table.deleteRow(i)
     }
-    const newDerived = derivedTable.insertRow();
-    const totalPriceCell = newDerived.insertCell(0);
-    const avgPrice = newDerived.insertCell(1);
 
-    totalPriceCell.innerHTML = totalPrice.toFixed(2);
-    avgPrice.innerHTML = (totalPrice/contents.length).toFixed(2);
-  })
+    let totalPrice = 0;
+
+    contents.forEach((element, rowNum) => {
+        const row = table.insertRow();
+
+        const name = row.insertCell(0);
+        const review = row.insertCell(1);
+        const price = row.insertCell(2);
+        const editButton = row.insertCell(3);
+        const deleteButton = row.insertCell(4);
+
+        name.innerHTML = element.name;
+        review.innerHTML = element.review;
+        price.innerHTML = element.price;
+
+        totalPrice += Number(element.price);
+
+        editButton.innerHTML = "<button class='btn btn-secondary'>Edit</button>"
+        deleteButton.innerHTML = "<button class='btn btn-secondary'>Delete</button>"
+
+        deleteButton.addEventListener("click", () => {
+            removeRow(element)
+        })
+
+        let toggle = true;
+
+        editButton.addEventListener("click", () => {
+            editRow(element, name, review, price, toggle);
+            if(toggle) {
+                editButton.innerHTML = "<button class='btn btn-success'>Save</button>"
+            }
+            toggle = !toggle;
+        })
+
+        const derivedTable = document.getElementById("derived");
+        if (derivedTable.rows.length > 1) {
+            derivedTable.deleteRow(1);
+        }
+        const newDerived = derivedTable.insertRow();
+        const totalPriceCell = newDerived.insertCell(0);
+        const avgPrice = newDerived.insertCell(1);
+
+        totalPriceCell.innerHTML = totalPrice.toFixed(2);
+        avgPrice.innerHTML = (totalPrice / contents.length).toFixed(2);
+    })
 }
 
-const editRow = async function( name, review, price ) {
-  const nameInput = document.getElementById( "gamename" ),
-      reviewInput = document.getElementById( "gamereview" ),
-      priceInput = document.getElementById( "gameprice" )
+const editRow = async function (element, name, review, price, toggle) {
 
-  nameInput.value = name
-  reviewInput.value = review
-  priceInput.value = price
+    if(toggle) {
+        name.innerHTML = `<input type="text" id="edit-name" value="${element.name}">`;
+        review.innerHTML = `<input type="text" id="edit-review" value="${element.review}">`;
+        price.innerHTML = `<input type="number" id="edit-price" value="${element.price}">`;
+    } else {
+        const nameInput = document.getElementById("edit-name"),
+            reviewInput = document.getElementById("edit-review"),
+            priceInput = document.getElementById("edit-price"),
+            json = {"id": element._id, "name": nameInput.value, "review": reviewInput.value, "price": priceInput.value}
+
+        const response = await fetch('/update', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(json),
+        })
+
+        console.log("updated row:", response)
+
+        await updateTableData()
+    }
+
 }
 
-const removeRow = async function(element) {
-  // update server
-  const response = await fetch( "/remove", {
-    method:"POST",
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(element)
-  })
+const removeRow = async function (element) {
+    // update server
+    const response = await fetch("/remove", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(element)
+    })
 
-  const newData = await response.json()
-  console.log( "removed row:", newData )
+    const newData = await response.json()
+    console.log("removed row:", newData)
 
-  await updateTableData()
+    await updateTableData()
 }

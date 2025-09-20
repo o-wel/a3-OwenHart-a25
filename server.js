@@ -145,6 +145,14 @@ app.post( '/submit', async (req,res) => {
     res.json( result )
 })
 
+app.post('/update', async (req,res) => {
+    const updated = await collection.updateOne(
+        {_id: new ObjectId(req.body.id)},
+        {$set: {name: req.body.name, review: req.body.review, price: req.body.price}}
+    )
+    res.json(updated)
+})
+
 app.post('/remove', async (req,res) => {
     const removed = await collection.deleteOne({_id: new ObjectId(req.body._id)})
     res.json(removed)
