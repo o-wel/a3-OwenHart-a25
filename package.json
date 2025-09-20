@@ -8,8 +8,12 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
+    "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "express-session": "^1.18.2",
     "mime": "^2.6.0",
-    "mongodb": "^6.19.0"
+    "mongodb": "^6.19.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0"
   }
 }

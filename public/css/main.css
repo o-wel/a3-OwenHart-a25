@@ -21,6 +21,12 @@ h1 {
   gap: 2rem;
 }
 
+.right-corner {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
 input {
   font-size: 1.1rem;
   border-radius: 5px;

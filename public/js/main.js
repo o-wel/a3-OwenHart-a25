@@ -2,17 +2,77 @@
 
 // page load actions
 window.onload = async function() {
-  const button = document.querySelector("button");
-  button.onclick = submit;
+    const button = document.getElementById("submitbtn");
+    if (button) {
+        button.onclick = submit;
+    }
 
-  const tableContents = await fetch( "/appdata", {
-    method:"GET",
-  } );
+    const loginButton = document.getElementById("loginbtn");
+    if (loginButton) {
+        loginButton.onclick = login;
+    }
 
-  const contents = await tableContents.json();
-  console.log( "response:", contents );
+    const logoutButton = document.getElementById("logoutbtn");
+    if (logoutButton) {
+        logoutButton.onclick = logout;
+    }
 
-  await updateTableData( contents );
+    const table = document.getElementById("wishlist");
+
+    if (table) {
+        const tableContents = await fetch("/appdata", {
+            method: "GET",
+        });
+
+        const contents = await tableContents.json();
+        console.log("response:", contents);
+
+        await updateTableData(contents);
+    }
+}
+
+const login = async function( event ) {
+    event.preventDefault();
+
+    const usernameInput = document.getElementById( "username" ),
+          passwordInput = document.getElementById( "password" ),
+          json = { "username": usernameInput.value, "password": passwordInput.value }
+
+    const response = await fetch( "/login", {
+        method:"POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(json),
+    })
+
+    console.log( "login response:", response );
+    if ( response.redirected ) {
+        window.location.href = response.url;
+
+    } else {
+        console.log("Login failed.");
+
+        const errMsg = document.getElementById("errMsg");
+        if(errMsg) {
+            errMsg.innerHTML = '<p class="text-danger-emphasis">Invalid username or password</p>';
+        }
+    }
+}
+
+const logout = async function( event ) {
+    event.preventDefault();
+
+    const response = await fetch( "/logout", {
+        method:"DELETE",
+    })
+
+    console.log( "response:", response );
+    if ( response.redirected ) {
+        window.location.href = response.url;
+    } else {
+        console.log("Logout failed.");
+    }
 }
 
 const submit = async function( event ) {

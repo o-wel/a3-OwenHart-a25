@@ -1,7 +1,10 @@
 const express = require( "express" ),
     app = express()
-
+const session = require('express-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 const { MongoClient, ServerApiVersion, ObjectId} = require('mongodb');
+
 const uri = `mongodb+srv://${process.env.USR}:${process.env.PASS}@${process.env.HOST}/?retryWrites=true&w=majority&appName=a3-OwenHart`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -14,6 +17,7 @@ const client = new MongoClient(uri, {
 });
 
 let collection = null;
+let userData = null
 
 async function run() {
     try {
@@ -27,6 +31,7 @@ async function run() {
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
         collection = client.db("a3-db").collection("game-wishlist");
+        userData = client.db("a3-db").collection("users");
     } finally {
         // Ensures that the client will close when you finish/error
         //await client.close();
@@ -34,8 +39,85 @@ async function run() {
     }
 }
 
-app.use(express.static("public"));
-app.use(express.json());
+// setting up passport
+app.use(session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: true
+}))
+app.use(passport.initialize());
+app.use(passport.session());
+
+const authUser = async (username, password, done) => {
+    const user = await userData.findOne({username: username, password: password});
+
+    if (!user) {
+        return done(null, false, { message: 'Could not find user with this password' });
+    } else {
+        return done(null, user);
+    }
+}
+
+const checkAuth = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
+    } else {
+        res.redirect('/loginpage');
+    }
+}
+
+const alreadyLoggedIn = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return res.redirect('/wishlist');
+    }
+    next()
+}
+
+passport.use(new LocalStrategy(authUser));
+
+passport.serializeUser((user, done) => {
+    console.log("serializing user:", user)
+    done(null, user)
+})
+passport.deserializeUser((user, done) => {
+    console.log("deserializing user:", user)
+    done(null, user)
+})
+
+// middleware and ejs
+app.use(express.json())
+app.use(express.static("public"))
+
+app.set("view engine", "ejs");
+app.set('views', './public/views');
+
+// frontend
+app.get('/', (req, res) => {
+    res.redirect(`/loginpage`);
+})
+
+app.get("/loginpage", alreadyLoggedIn, (req, res) => {
+    res.render("index", {loggedIn: false});
+})
+
+app.get("/wishlist", checkAuth, (req, res) => {
+    res.render("index", {loggedIn: true});
+})
+
+// backend
+app.post('/login', passport.authenticate('local', {
+    successRedirect: '/wishlist',
+}))
+
+app.delete('/logout', (req, res) => {
+    req.logOut(function (err) {
+        if (err) {
+            return next(err);
+        }
+        res.redirect('/loginpage');
+    });
+    console.log('logged out');
+})
 
 app.get("/appdata", async (req, res) => {
     if(collection !== null){
