@@ -96,11 +96,11 @@ app.get('/', (req, res) => {
 })
 
 app.get("/loginpage", alreadyLoggedIn, (req, res) => {
-    res.render("index", {loggedIn: false});
+    res.render("index.ejs", {loggedIn: false});
 })
 
 app.get("/wishlist", checkAuth, (req, res) => {
-    res.render("index", {loggedIn: true});
+    res.render("index.ejs", {loggedIn: true});
 })
 
 // backend

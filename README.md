@@ -12,6 +12,7 @@ the project and framework. The express middleware packages I used were:
 - passport: an authentication middleware used to verify users
 - passport-local: the local strategy for passport authentication, as in, setting up passport with mongoDB
 - express-session: used to manage user sessions with passport to maintain login
+- ejs: not sure if this counts as middleware, but it is used to easily render multiple pages
 
 You can create an account or log in with the account:
 - Username: admin
